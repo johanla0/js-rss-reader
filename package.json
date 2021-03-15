@@ -1,0 +1,25 @@
+{
+  "name": "@hexlet/code",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "3rd frontend project (rss reader)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/johanla0/frontend-project-lvl3.git"
+  },
+  "author": "johanla0",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/johanla0/frontend-project-lvl3/issues"
+  },
+  "homepage": "https://github.com/johanla0/frontend-project-lvl3#readme",
+  "devDependencies": {
+    "eslint": "^7.22.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-plugin-import": "^2.22.1"
+  }
+}
