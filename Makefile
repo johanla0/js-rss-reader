@@ -2,6 +2,10 @@ BRANCH := $(shell git rev-parse --abbrev-ref HEAD)
 
 branch:
 	git checkout $(ARGS) > /dev/null 2>&1 || git checkout -b $(ARGS)
+build:
+	npm run build
+dev:
+	npm run dev
 history:
 	git log
 install:
