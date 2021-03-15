@@ -6,9 +6,7 @@
 
 ### Web-service that helps to read RSS feeds
 
-To start editing fork or
-
-1. Clone it
+1. To start editing fork or clone this repository
   ```
   $ git clone https://github.com/johanla0/frontend-project-lvl3.git
   ```
