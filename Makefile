@@ -3,8 +3,8 @@ BRANCH := $(shell git rev-parse --abbrev-ref HEAD)
 branch:
 	git checkout $(ARGS) > /dev/null 2>&1 || git checkout -b $(ARGS)
 build:
-	install
-	npm run build
+	rm -rf dist
+	NODE_ENV=production npx webpack
 dev:
 	npm run dev
 history:
@@ -29,5 +29,7 @@ uncommit:
 	git reset --soft HEAD^
 upd:
 	git merge master --no-edit
+webpack:
+	npx webpack serve --mode development
 
 .PHONY: test
