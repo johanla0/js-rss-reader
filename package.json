@@ -8,7 +8,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "webpack --mode development",
     "prebuild": "npm ci",
-    "build": "webpack --mode production && mv dist ../"
+    "build": "webpack --mode production"
   },
   "repository": {
     "type": "git",
