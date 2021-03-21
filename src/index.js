@@ -1,22 +1,35 @@
 import './scss/style.scss';
 import * as yup from 'yup';
 import onChange from 'on-change';
+import axios from 'axios';
 
 const urlSchema = yup.string().required().url();
 
-const render = (state, path) => {
+const render = (state) => {
   const url = document.querySelector('input[name="url"]');
-  if (path === 'isValid') {
-    if (state.isValid === true) {
-      url.classList.remove('is-invalid');
-      url.classList.add('is-valid');
-    } else if (state.isValid === false) {
+  const fieldset = document.querySelector('fieldset');
+  console.log(state.state);
+  switch (state.state) {
+    case 'empty':
+      url.value = '';
+      fieldset.disabled = false;
+      break;
+    case 'editing':
+      break;
+    case 'invalid':
+      fieldset.disabled = false;
       url.classList.remove('is-valid');
       url.classList.add('is-invalid');
-    } else {
-      url.classList.remove('is-valid');
+      break;
+    case 'valid':
       url.classList.remove('is-invalid');
-    }
+      url.classList.add('is-valid');
+      break;
+    case 'sent':
+      fieldset.disabled = true;
+      break;
+    default:
+      break;
   }
   url.value = state.url;
 };
@@ -27,7 +40,11 @@ const state = {
   errors: [],
   isValid: '',
   url: '',
+  state: 'empty',
 };
+
+// 'state' corresponds to the FSM state:
+// empty -> editing -> (valid -> sent -> empty) / (invalid -> filling)
 
 const watchedState = onChange(state, (path, value, previousValue, name) => {
   const temp = {
@@ -37,7 +54,7 @@ const watchedState = onChange(state, (path, value, previousValue, name) => {
     name,
   };
   console.log(temp);
-  render(state, path);
+  render(state);
 });
 
 export default () => {
@@ -49,16 +66,34 @@ export default () => {
     urlSchema.isValid(url.value)
       .then((valid) => {
         watchedState.isValid = valid;
+        if (valid) {
+          watchedState.state = 'valid';
+          watchedState.state = 'sent';
+          axios
+            .get(watchedState.url)
+            .then((response) => {
+              console.log(response);
+              watchedState.state = 'empty';
+            })
+            .catch((error) => {
+              console.log(error);
+              watchedState.state = 'invalid';
+            });
+        } else {
+          watchedState.state = 'invalid';
+        }
       });
   });
 
   url.addEventListener('focus', () => {
     watchedState.isValid = '';
+    watchedState.state = 'editing';
   });
 
   const example = document.querySelector('a#example');
   example.addEventListener('click', (e) => {
     e.preventDefault();
     watchedState.url = example.textContent;
+    watchedState.state = 'editing';
   });
 };

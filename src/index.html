@@ -14,20 +14,22 @@
           <h1 class="display-3">RSS агрегатор</h1>
           <p class="lead">Добавьте ссылку на RSS-ленту, чтобы увидеть последние записи</p>
           <form action="" class="rss-form" novalidate>
-            <div class="row">
-              <div class="col position-relative">
-                <input autofocus="" required="" name="url" aria-label="url" class="form-control form-control-lg w-100" placeholder="ссылка на RSS-ленту">
-                <div class="valid-tooltip ">
-                  Успешно добавлено!
+            <fieldset>
+              <div class="row">
+                <div class="col position-relative">
+                  <input autofocus="" required="" name="url" aria-label="url" class="form-control form-control-lg w-100" placeholder="ссылка на RSS-ленту">
+                  <div class="valid-tooltip ">
+                    Успешно добавлено!
+                  </div>
+                  <div class="invalid-tooltip">
+                    Пожалуйста, проверьте адрес
+                  </div>
                 </div>
-                <div class="invalid-tooltip">
-                  Пожалуйста, проверьте адрес
+                <div class="col-auto">
+                  <button type="submit" aria-label="add" class="btn btn-lg btn-warning px-sm-5">Add</button>
                 </div>
               </div>
-              <div class="col-auto">
-                <button type="submit" aria-label="add" class="btn btn-lg btn-warning px-sm-5">Add</button>
-              </div>
-            </div>
+            </fieldset>
           </form>
           <p class="my-1">Пример: <a href="" id="example" class="link-light">https://ru.hexlet.io/lessons.rss</a></p>
         </div>
