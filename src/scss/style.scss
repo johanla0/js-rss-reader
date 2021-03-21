@@ -6,7 +6,6 @@
   background: rgba($color, $opacity);
 }
 
-.container-fluid {
+header {
    @include background-opacity(map-get($theme-colors, 'dark'), 0.5);
-   
 }
