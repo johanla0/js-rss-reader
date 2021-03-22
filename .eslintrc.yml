@@ -7,4 +7,4 @@ parserOptions:
   ecmaVersion: 2020
   sourceType: module
 ignorePatterns: ['main.js']
-rules: {}
+rules: { 'import/extensions': 'off' }
