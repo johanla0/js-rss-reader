@@ -11,41 +11,41 @@
     <header class="container-fluid p-5">
       <div class="row">
         <div class="col-md-10 col-lg-8 mx-auto text-white">
-          <h1 class="display-3">RSS агрегатор</h1>
-          <p class="lead">Добавьте ссылку на RSS-ленту, чтобы увидеть последние записи</p>
+          <h1 class="display-3" id="title">RSS агрегатор</h1>
+          <p class="lead" id="subtitle">Добавьте ссылку на RSS-ленту, чтобы увидеть последние записи</p>
           <form action="" class="rss-form" novalidate>
             <fieldset>
               <div class="row">
                 <div class="col position-relative">
                   <input autofocus="" required="" name="url" aria-label="url" class="form-control form-control-lg w-100" placeholder="ссылка на RSS-ленту">
-                  <div class="valid-tooltip ">
+                  <div class="valid-tooltip" id="valid-tooltip">
                     Успешно добавлено!
                   </div>
-                  <div class="invalid-tooltip">
+                  <div class="invalid-tooltip" id="invalid-tooltip">
                     Пожалуйста, проверьте адрес
                   </div>
                 </div>
                 <div class="col-auto">
-                  <button type="submit" aria-label="add" class="btn btn-lg btn-warning px-sm-5">Add</button>
+                  <button type="submit" aria-label="add" class="btn btn-lg btn-warning px-sm-5" id="add">Добавить</button>
                 </div>
               </div>
             </fieldset>
           </form>
-          <p class="my-1">Пример: <a href="" id="example" class="link-light">https://ru.hexlet.io/lessons.rss</a></p>
+          <p class="my-1"><span id="example">Пример: </span><a href="" id="exampleURL" class="link-light">https://ru.hexlet.io/lessons.rss</a></p>
         </div>
       </div>
     </header>
     <section class="container-fluid p-5 content d-none">
       <div class="row">
         <div class="col-md-10 col-lg-8 mx-auto feeds">
-          <h2>Фиды</h2>
+          <h2 id="feeds">Фиды</h2>
           <ul class="list-group mb-5">
           </ul>
         </div>
       </div>
       <div class="row">
         <div class="col-md-10 col-lg-8 mx-auto posts">
-          <h2>Посты</h2>
+          <h2 id="posts">Посты</h2>
           <ul class="list-group">
           </ul>
         </div>

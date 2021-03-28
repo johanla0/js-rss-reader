@@ -1,0 +1,9 @@
+translation:
+  title: RSS агрегатор
+  subtitle: Добавьте адрес ссылки на RSS-ленту, чтобы увидеть последние записи
+  valid-tooltip: Успешно добавлено!
+  invalid-tooltip: Пожалуйста, проверьте адрес
+  add: Добавить
+  example: 'Пример: '
+  feeds: Фиды
+  posts: Посты

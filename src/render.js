@@ -1,4 +1,14 @@
+import i18next from 'i18next';
+
+const updateTranslations = () => {
+  const fields = ['title', 'subtitle', 'valid-tooltip', 'invalid-tooltip', 'add', 'example', 'feeds', 'posts'];
+  fields.forEach((field) => {
+    document.querySelector(`#${field}`).textContent = i18next.t(`${field}`);
+  });
+};
+
 export default (state) => {
+  updateTranslations();
   const url = document.querySelector('input[name="url"]');
   const fieldset = document.querySelector('fieldset');
   const feedsList = document.querySelector('.feeds ul');

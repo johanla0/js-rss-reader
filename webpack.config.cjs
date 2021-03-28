@@ -13,6 +13,11 @@ module.exports = {
   module: {
     rules: [
       {
+        test: /\.ya?ml$/,
+        type: 'json',
+        use: 'yaml-loader',
+      },
+      {
         test: /\.(scss)$/,
         use: [
           {
@@ -56,4 +61,9 @@ module.exports = {
       template: './src/index.html',
     }),
   ],
+  resolve: {
+    fallback: {
+      fs: false,
+    },
+  },
 };

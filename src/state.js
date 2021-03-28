@@ -10,7 +10,7 @@ const state = {
   errors: [],
   isValid: '',
   url: '',
-  state: 'empty',
+  state: '',
 };
 
 // Description:
@@ -19,11 +19,14 @@ const state = {
 // state.state corresponds to the FSM state:
 // empty ->
 //   editing ->
+//     invalid ->
+//       editing
 //     valid ->
 //       sent ->
-//         success -> empty
-//         invalid
-//     invalid -> editing
+//         success ->
+//           empty
+//         invalid ->
+//           editing
 
 const watchedState = onChange(state, () => {
   render(state);

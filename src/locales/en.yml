@@ -1,0 +1,9 @@
+translation:
+  title: RSS reader
+  subtitle: Add a link to the field below to start reading RSS feed
+  valid-tooltip: Added successfully!
+  invalid-tooltip: Please, check the link
+  add: Add
+  example: 'Try this: '
+  feeds: Feeds
+  posts: Posts

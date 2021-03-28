@@ -1,5 +1,4 @@
 /* eslint-disable no-param-reassign */
-import './scss/style.scss';
 import * as yup from 'yup';
 import getFeed from './getFeed.js';
 import parseRss from './parseRss.js';
@@ -22,33 +21,34 @@ export default () => {
     urlSchema.isValid(url.value)
       .then((valid) => {
         watchedState.isValid = valid;
-        if (valid) {
-          watchedState.state = 'valid';
-          watchedState.state = 'sent';
-          getFeed(url.value)
-            .then((response) => {
-              const { feed, posts } = parseRss(response);
-              state.feedId += 1;
-              feed.id = state.feedId;
-              posts.forEach((post) => {
-                state.postId += 1;
-                post.feedId = state.feedId;
-                post.id = state.postId;
-              });
-              watchedState.feeds.push(feed);
-              watchedState.posts.push(...posts);
-              watchedState.state = 'success';
-              watchedState.url = '';
-              watchedState.state = 'empty';
-            })
-            .catch((error) => {
-              console.error(error);
-              watchedState.state = 'invalid';
-              watchedState.url = '';
-            });
-        } else {
+        if (!valid) {
           watchedState.state = 'invalid';
+          return;
         }
+        watchedState.state = 'valid';
+        watchedState.state = 'sent';
+        getFeed(url.value)
+          .then((response) => {
+            const { feed, posts } = parseRss(response);
+            state.feedId += 1;
+            feed.id = state.feedId;
+            posts.forEach((post) => {
+              state.postId += 1;
+              post.feedId = state.feedId;
+              post.id = state.postId;
+            });
+            watchedState.feeds.push(feed);
+            watchedState.posts.push(...posts);
+            watchedState.state = 'success';
+            watchedState.url = '';
+            watchedState.state = 'empty';
+          })
+          .catch((error) => {
+            // eslint-disable-next-line no-console
+            console.error(error);
+            watchedState.state = 'invalid';
+            watchedState.url = '';
+          });
       });
   });
 
@@ -57,10 +57,14 @@ export default () => {
     watchedState.state = 'editing';
   });
 
-  const example = document.querySelector('a#example');
-  example.addEventListener('click', (e) => {
+  const exampleURL = document.querySelector('a#exampleURL');
+  exampleURL.addEventListener('click', (e) => {
     e.preventDefault();
-    watchedState.url = example.textContent;
+    watchedState.url = exampleURL.textContent;
     watchedState.state = 'editing';
+  });
+
+  window.addEventListener('load', () => {
+    watchedState.state = 'empty';
   });
 };
