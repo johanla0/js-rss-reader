@@ -7,3 +7,5 @@ translation:
   example: 'Try this: '
   feeds: Feeds
   posts: Posts
+  placeholders:
+    inputURL: enter URL

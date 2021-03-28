@@ -7,3 +7,5 @@ translation:
   example: 'Пример: '
   feeds: Фиды
   posts: Посты
+  placeholders:
+    inputURL: введите URL

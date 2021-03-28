@@ -2,8 +2,12 @@ import i18next from 'i18next';
 
 const updateTranslations = () => {
   const fields = ['title', 'subtitle', 'valid-tooltip', 'invalid-tooltip', 'add', 'example', 'feeds', 'posts'];
+  const placeholders = ['inputURL'];
   fields.forEach((field) => {
     document.querySelector(`#${field}`).textContent = i18next.t(`${field}`);
+  });
+  placeholders.forEach((placeholder) => {
+    document.querySelector(`.${placeholder}`).placeholder = i18next.t(`placeholders.${placeholder}`);
   });
 };
 
