@@ -3,15 +3,21 @@ import i18next from 'i18next';
 const updateTranslations = () => {
   const fields = ['title', 'subtitle', 'valid-tooltip', 'invalid-tooltip', 'add', 'example', 'feeds', 'posts'];
   const placeholders = ['inputURL'];
+  const language = {
+    en: 'English',
+    ru: 'Русский',
+  };
   fields.forEach((field) => {
     document.querySelector(`#${field}`).textContent = i18next.t(`${field}`);
   });
   placeholders.forEach((placeholder) => {
     document.querySelector(`.${placeholder}`).placeholder = i18next.t(`placeholders.${placeholder}`);
   });
+  document.querySelector('#languageSwitchButton').textContent = language[i18next.language.slice(0, 2)];
 };
 
 export default (state) => {
+  i18next.changeLanguage(state.lng);
   updateTranslations();
   const url = document.querySelector('input[name="url"]');
   const fieldset = document.querySelector('fieldset');

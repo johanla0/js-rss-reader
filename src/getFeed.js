@@ -10,4 +10,4 @@ const getFeedWithFetch = (url) => fetch(
   .then((response) => response.text())
   .then((response) => response);
 
-export default getFeedWithFetch;
+export { getFeedWithFetch as default, getFeedWithAxios };

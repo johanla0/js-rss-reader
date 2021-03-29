@@ -11,6 +11,7 @@ const state = {
   isValid: '',
   url: '',
   state: '',
+  lng: '',
 };
 
 // Description:

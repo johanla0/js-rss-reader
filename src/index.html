@@ -9,6 +9,16 @@
 <body>
   <main class="flex-grow-1">
     <header class="container-fluid p-5">
+      <div class="row justify-content-end">
+        <div class="col-1">
+          <div class="dropdown" id="languageSelector">
+            <button type="button" class="btn btn-sm btn-secondary dropdown-toggle" id="languageSwitchButton" data-bs-toggle="dropdown" aria-expanded="false">Language</button>
+            <ul class="dropdown-menu" aria-labelledby="languageSwitchButton">
+              <li><a href="#" class="dropdown-item" data-lng="en">English</a></li>
+              <li><a href="#" class="dropdown-item" data-lng="ru">Русский</a></li>
+            </ul>
+          </div>
+        </div>
       <div class="row">
         <div class="col-md-10 col-lg-8 mx-auto text-white">
           <h1 class="display-3" id="title">RSS агрегатор</h1>
