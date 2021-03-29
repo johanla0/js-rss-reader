@@ -4,6 +4,7 @@ import i18next from 'i18next';
 import getFeed from './getFeed.js';
 import parseRss from './parseRss.js';
 import { watchedState, state } from './watcher.js';
+import updateRss from './updateRss.js';
 
 const urlSchema = yup.string().required().url();
 
@@ -78,4 +79,7 @@ export default () => {
   window.addEventListener('load', () => {
     watchedState.state = 'empty';
   });
+
+  const refreshTimeout = 5000;
+  setTimeout(() => updateRss(state), refreshTimeout);
 };

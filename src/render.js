@@ -17,7 +17,6 @@ const updateTranslations = () => {
 };
 
 export default (state) => {
-  i18next.changeLanguage(state.lng);
   updateTranslations();
   const url = document.querySelector('input[name="url"]');
   const fieldset = document.querySelector('fieldset');
