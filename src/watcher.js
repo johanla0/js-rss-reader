@@ -6,12 +6,9 @@ const state = {
   urls: [],
   feeds: [],
   posts: [],
-  feedId: 0,
-  postId: 0,
-  errors: [],
-  isValid: '',
   url: '',
   state: '',
+  timeoutId: '',
 };
 
 // Description:
