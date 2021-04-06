@@ -1,7 +1,7 @@
 translation:
   title: RSS агрегатор
   subtitle: Добавьте адрес ссылки на RSS-ленту, чтобы увидеть последние записи
-  valid-tooltip: Успешно добавлено!
+  valid-tooltip: RSS успешно загружен
   invalid-tooltip: Пожалуйста, проверьте адрес
   example: 'Пример: '
   feeds: Фиды

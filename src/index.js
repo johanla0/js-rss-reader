@@ -6,7 +6,7 @@ import { watchedState, state } from './watcher.js';
 const urlSchema = yup.string().required().url();
 
 export default () => {
-  watchedState.lng = i18next.language.slice(0, 2);
+  watchedState.lng = i18next.language?.slice(0, 2);
   const languages = document.querySelectorAll(
     '#languageSelector .dropdown-item',
   );
