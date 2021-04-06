@@ -31,7 +31,10 @@ const loadFeed = (url) => {
 
 const updateFeeds = (state, refreshTimeout) => {
   const { urls } = state;
-  setTimeout(() => updateFeeds(state, refreshTimeout), refreshTimeout);
+  watchedState.timeoutId = setTimeout(
+    () => updateFeeds(state, refreshTimeout),
+    refreshTimeout,
+  );
   if (urls.length === 0) {
     return;
   }

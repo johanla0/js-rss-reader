@@ -147,7 +147,8 @@ export default (state) => {
         li.append(modal);
         li.classList.add('list-group-item', 'position-relative');
         postsList.append(li);
-        modal.addEventListener('hidden.bs.modal', () => {
+        modal.addEventListener('shown.bs.modal', () => {
+          clearTimeout(state.timeoutId);
           a.classList.remove('fw-bold');
           a.classList.add('fw-normal');
         });

@@ -27,13 +27,11 @@ export default () => {
     e.preventDefault();
     if (state.urls.includes(url.value)) {
       watchedState.state = 'invalid';
-      watchedState.errors.push(`duplicate: ${url.value}`);
       return;
     }
     watchedState.url = url.value;
     watchedState.urls.push(url.value);
     urlSchema.isValid(url.value).then((valid) => {
-      watchedState.isValid = valid;
       if (!valid) {
         watchedState.state = 'invalid';
         return;
@@ -45,7 +43,6 @@ export default () => {
   });
 
   url.addEventListener('focus', () => {
-    watchedState.isValid = '';
     watchedState.state = 'editing';
   });
 
@@ -57,5 +54,8 @@ export default () => {
   });
 
   const refreshTimeout = 5000;
-  setTimeout(() => updateFeeds(state, refreshTimeout), refreshTimeout);
+  watchedState.timeoutId = setTimeout(
+    () => updateFeeds(state, refreshTimeout),
+    refreshTimeout,
+  );
 };
