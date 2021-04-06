@@ -1,13 +1,12 @@
 /* eslint-disable no-unused-vars */
 import axios from 'axios';
 
-const getFeedWithAxios = (url) => axios.get(url)
-  .then((response) => response.data);
+const getDataWithAxios = (url) => axios.get(url).then((response) => response.data);
 
-const getFeedWithFetch = (url) => fetch(
+const getDataWithFetch = (url) => fetch(
   `https://hexlet-allorigins.herokuapp.com/raw?disableCache=true&url=${url}`,
 )
   .then((response) => response.text())
   .then((response) => response);
 
-export { getFeedWithFetch as default, getFeedWithAxios };
+export { getDataWithFetch as default, getDataWithAxios };

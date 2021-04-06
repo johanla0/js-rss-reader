@@ -12,12 +12,11 @@ const state = {
   isValid: '',
   url: '',
   state: '',
-  lng: '',
 };
 
 // Description:
-// feeds: {title, description, id, link}
-// posts: {title, description, id, feedId, link, pubDate}
+// feeds: {title, description, link}
+// posts: {title, description, link, guid, pubDate}
 // state.state corresponds to the FSM state:
 // empty ->
 //   editing ->

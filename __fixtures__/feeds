@@ -7,3 +7,5 @@ http://www.aljazeera.com/xml/rss/all.xml
 https://www.buzzfeed.com/world.xml
 https://www.nytimes.com/svc/collections/v1/publish/https://www.nytimes.com/section/world/rss.xml
 http://feeds.bbci.co.uk/news/world/rss.xml
+http://lorem-rss.herokuapp.com/feed?unit=minute
+http://lorem-rss.herokuapp.com/feed?unit=second&interval=30
