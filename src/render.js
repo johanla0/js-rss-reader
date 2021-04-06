@@ -1,17 +1,31 @@
+/* eslint-disable no-param-reassign */
 import i18next from 'i18next';
+import hash from './getHash.js';
 
 const updateTranslations = () => {
-  const fields = ['title', 'subtitle', 'valid-tooltip', 'invalid-tooltip', 'add', 'example', 'feeds', 'posts'];
+  const fields = ['title', 'subtitle', 'valid-tooltip', 'invalid-tooltip', 'example', 'feeds', 'posts'];
   const placeholders = ['inputURL'];
+  const buttonsList = ['button_add', 'button_preview', 'button_close', 'button_openLink'];
   const language = {
     en: 'English',
     ru: 'Русский',
   };
   fields.forEach((field) => {
-    document.querySelector(`#${field}`).textContent = i18next.t(`${field}`);
+    const elem = document.querySelector(`#${field}`);
+    if (elem !== undefined) {
+      elem.textContent = i18next.t(`${field}`);
+    }
   });
   placeholders.forEach((placeholder) => {
-    document.querySelector(`.${placeholder}`).placeholder = i18next.t(`placeholders.${placeholder}`);
+    document.querySelectorAll(`.${placeholder}`).placeholder = i18next.t(`placeholders.${placeholder}`);
+  });
+  buttonsList.forEach((elem) => {
+    const buttons = document.querySelectorAll(`.${elem}`);
+    buttons.forEach((button) => {
+      if (button !== undefined) {
+        button.textContent = i18next.t(`buttons.${elem}`);
+      }
+    });
   });
   document.querySelector('#languageSwitchButton').textContent = language[i18next.language.slice(0, 2)];
 };
@@ -45,16 +59,16 @@ export default (state) => {
     case 'success':
       feedsList.textContent = '';
       state.feeds.forEach((feed) => {
-        const li = document.createElement('li');
-        const h3 = document.createElement('h3');
-        const p = document.createElement('p');
         const a = document.createElement('a');
-        li.dataset.feedId = feed.id;
-        h3.textContent = feed.title;
         a.textContent = feed.description;
         a.href = feed.link;
         a.classList.add('stretched-link');
+        const p = document.createElement('p');
         p.append(a);
+        const h3 = document.createElement('h3');
+        h3.textContent = feed.title;
+        const li = document.createElement('li');
+        li.dataset.feedId = feed.id;
         li.append(h3);
         li.append(p);
         li.classList.add('list-group-item', 'position-relative');
@@ -62,27 +76,81 @@ export default (state) => {
       });
       postsList.textContent = '';
       state.posts.forEach((post) => {
-        const li = document.createElement('li');
-        const h4 = document.createElement('h4');
-        const p = document.createElement('p');
         const a = document.createElement('a');
-        li.dataset.id = post.id;
-        li.dataset.feedId = post.feedId;
+        a.classList.add('fw-bold');
         a.textContent = post.title;
         a.href = post.link;
-        a.classList.add('font-weight-bold');
-        a.dataset.id = post.id;
         a.dataset.feedId = post.feedId;
+        const postId = hash(post.guid);
+        a.dataset.id = postId;
         a.target = '_blank';
         a.rel = 'noopener noreferer';
+        const h5 = document.createElement('h5');
+        h5.append(a);
+        const buttonPreview = document.createElement('button');
+        buttonPreview.classList.add('btn', 'btn-primary', 'btn-sm', 'button_preview');
+        buttonPreview.type = 'button';
+        buttonPreview.dataset.id = postId;
+        buttonPreview.dataset.bsToggle = 'modal';
+        buttonPreview.dataset.bsTarget = `#modal_${postId}`;
+        const modalTitle = document.createElement('h5');
+        modalTitle.classList.add('modal-title');
+        modalTitle.id = `modal_${postId}_label`;
+        modalTitle.textContent = post.title;
+        const buttonCloseCross = document.createElement('button');
+        buttonCloseCross.classList.add('btn-close');
+        buttonCloseCross.dataset.bsDismiss = 'modal';
+        const modalHeader = document.createElement('div');
+        modalHeader.classList.add('modal-header');
+        modalHeader.append(modalTitle);
+        modalHeader.append(buttonCloseCross);
+        const p = document.createElement('p');
         p.textContent = post.description;
-        h4.append(a);
-        li.append(h4);
-        li.append(p);
+        const modalBody = document.createElement('div');
+        modalBody.classList.add('modal-body');
+        modalBody.append(p);
+        const buttonOpenLink = document.createElement('a');
+        buttonOpenLink.classList.add('btn', 'btn-primary', 'button_openLink');
+        buttonOpenLink.href = post.link;
+        buttonOpenLink.target = '_blank';
+        buttonOpenLink.rel = 'noopener noreferer';
+        const buttonClose = document.createElement('button');
+        buttonClose.classList.add('btn', 'btn-secondary', 'button_close');
+        buttonClose.dataset.bsDismiss = 'modal';
+        const modalFooter = document.createElement('div');
+        modalFooter.classList.add('modal-footer');
+        modalFooter.append(buttonOpenLink);
+        modalFooter.append(buttonClose);
+        const modalContent = document.createElement('div');
+        modalContent.classList.add('modal-content');
+        modalContent.append(modalHeader);
+        modalContent.append(modalBody);
+        modalContent.append(modalFooter);
+        const modalDialog = document.createElement('div');
+        modalDialog.classList.add(
+          'modal-dialog',
+          'modal-dialog-centered',
+          'modal-dialog-scrollable',
+        );
+        modalDialog.append(modalContent);
+        const modal = document.createElement('div');
+        modal.classList.add('modal', 'fade');
+        modal.id = `modal_${postId}`;
+        modal.tabindex = '-1';
+        modal.ariaLabelledby = `modal_${postId}_label`;
+        modal.ariaHidden = 'true';
+        modal.append(modalDialog);
+        const li = document.createElement('li');
+        li.dataset.feedId = post.feedId;
+        li.append(h5);
+        li.append(buttonPreview);
+        li.append(modal);
         li.classList.add('list-group-item', 'position-relative');
         postsList.append(li);
-        // button 'btn btn-primary btn-sm' data-id: '',
-        // data-toggle: 'modal', data-target="#modal" type="button"
+        modal.addEventListener('hidden.bs.modal', () => {
+          a.classList.remove('fw-bold');
+          a.classList.add('fw-normal');
+        });
       });
       sectionContent.classList.remove('d-none');
       break;

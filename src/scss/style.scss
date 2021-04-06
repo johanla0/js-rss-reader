@@ -9,3 +9,14 @@
 header {
    @include background-opacity(map-get($theme-colors, 'dark'), 0.5);
 }
+
+.posts .list-group li {
+  display: flex;
+  justify-content: space-between;
+  padding-top: 15px;
+  padding-bottom: 15px;
+
+  a {
+    text-decoration: none;
+  }
+}

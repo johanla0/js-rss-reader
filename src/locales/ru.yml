@@ -3,9 +3,13 @@ translation:
   subtitle: Добавьте адрес ссылки на RSS-ленту, чтобы увидеть последние записи
   valid-tooltip: Успешно добавлено!
   invalid-tooltip: Пожалуйста, проверьте адрес
-  add: Добавить
   example: 'Пример: '
   feeds: Фиды
   posts: Посты
   placeholders:
     inputURL: введите URL
+  buttons:
+    button_add: Добавить
+    button_preview: Просмотр
+    button_close: Закрыть
+    button_openLink: Читать полностью

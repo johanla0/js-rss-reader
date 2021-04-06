@@ -15,8 +15,8 @@ const state = {
 };
 
 // Description:
-// feeds: {title, description, link}
-// posts: {title, description, link, guid, pubDate}
+// feeds: {title, description, link, id}
+// posts: {title, description, link, feedId, guid, pubDate}
 // state.state corresponds to the FSM state:
 // empty ->
 //   editing ->

@@ -3,9 +3,13 @@ translation:
   subtitle: Add a link to the field below to start reading RSS feed
   valid-tooltip: Added successfully!
   invalid-tooltip: Please, check the link
-  add: Add
   example: 'Try this: '
   feeds: Feeds
   posts: Posts
   placeholders:
     inputURL: enter URL
+  buttons:
+    button_add: Add
+    button_preview: Preview
+    button_close: Close
+    button_openLink: Read article
