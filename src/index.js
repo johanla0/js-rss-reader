@@ -5,10 +5,6 @@ import { loadFeed, updateFeeds } from './processFeeds.js';
 const urlSchema = yup.string().required().url();
 
 export default (watchedState) => {
-  window.addEventListener('load', () => {
-    watchedState.form.state = 'empty';
-  });
-
   const form = document.querySelector('.rss-form');
   const url = document.querySelector('input[name="url"]');
   form.addEventListener('submit', (e) => {
@@ -42,8 +38,5 @@ export default (watchedState) => {
   });
 
   const refreshTimeout = 5000;
-  watchedState.timeoutId = setTimeout(
-    () => updateFeeds(watchedState, refreshTimeout),
-    refreshTimeout,
-  );
+  updateFeeds(watchedState, refreshTimeout);
 };

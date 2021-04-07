@@ -70,8 +70,12 @@ export default (state, i18nInstance) => {
       break;
     case 'sent':
       fieldset.disabled = true;
+      document.querySelector('#loadingSpinner').classList.remove('d-none');
+      document.querySelector('#loadingSpinner').classList.add('d-block');
       break;
     case 'success':
+      document.querySelector('#loadingSpinner').classList.add('d-none');
+      document.querySelector('#loadingSpinner').classList.remove('d-block');
       feedsList.textContent = '';
       state.feeds.forEach((feed) => {
         const a = document.createElement('a');
@@ -168,7 +172,6 @@ export default (state, i18nInstance) => {
         li.classList.add('list-group-item', 'position-relative');
         postsList.append(li);
         modal.addEventListener('shown.bs.modal', () => {
-          clearTimeout(state.timeoutId);
           a.classList.remove('fw-bold');
           a.classList.add('fw-normal');
         });

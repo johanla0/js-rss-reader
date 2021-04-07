@@ -16,10 +16,9 @@ const run = () => {
     posts: [],
     form: {
       url: '',
-      state: '',
+      state: 'empty',
     },
     lng: '',
-    timeoutId: '',
   };
 
   // Description:
