@@ -13,3 +13,5 @@ translation:
     button_preview: Preview
     button_close: Close
     button_openLink: Read article
+  alerts:
+    no_rss: RSS not found

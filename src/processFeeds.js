@@ -1,16 +1,13 @@
 /* eslint-disable no-param-reassign */
 import _ from 'lodash';
-import hash from './getHash.js';
 import getRawData from './getRawData.js';
 import parseRss from './parseRss.js';
 
 const getFeed = (url) => getRawData(url)
   .then((response) => {
     const { feed, posts } = parseRss(response);
-    const feedId = hash(feed.link);
-    feed.id = feedId;
     posts.forEach((post) => {
-      post.feedId = feedId;
+      post.feedLink = feed.link;
     });
     return { feed, posts };
   })
@@ -20,47 +17,52 @@ const getFeed = (url) => getRawData(url)
   });
 
 const loadFeed = (url, watchedState) => {
+  watchedState.process.state = 'idle';
   getFeed(url).then((result) => {
     const { feed, posts } = result;
     if (feed !== undefined) {
       watchedState.feeds.push(feed);
-      watchedState.posts.push(...posts);
+      watchedState.posts.push(...posts.reverse());
       watchedState.form.state = 'success';
       watchedState.form.url = '';
       watchedState.form.state = 'empty';
+      watchedState.content.state = 'loaded';
     } else {
       watchedState.form.state = 'invalid';
-      watchedState.form.url = '';
     }
-  });
+  })
+    .catch(() => {
+      watchedState.urls.pop();
+      watchedState.form.state = 'invalid';
+      watchedState.process.state = 'invalid';
+    });
 };
 
 const updateFeeds = (watchedState, refreshTimeout) => {
-  const timeoutId = setTimeout(
+  watchedState.content.state = 'idle';
+  setTimeout(
     () => updateFeeds(watchedState, refreshTimeout),
     refreshTimeout,
   );
   const { urls } = watchedState;
   if (urls.length === 0) {
-    return timeoutId;
+    return;
   }
   for (let i = 0; i < urls.length; i += 1) {
     getFeed(urls[i])
       .then((result) => {
         const { feed, posts } = result;
-        const feedId = hash(feed.link);
         const savedPosts = watchedState.posts.filter(
-          (elem) => elem.feedId === feedId,
+          (elem) => elem.feedLink === feed.link,
         );
         const newPosts = _.differenceWith(posts, savedPosts, _.isEqual);
-        if (newPosts.length > 0) {
-          watchedState.form.state = 'updated';
-          watchedState.posts.unshift(...newPosts);
+        if (newPosts.length === 0) {
+          return;
         }
-        return timeoutId;
-      })
-      // eslint-disable-next-line no-console
-      .catch((error) => console.error(error));
+        watchedState.posts.push(...newPosts);
+        watchedState.newPosts = newPosts.reverse();
+        watchedState.content.state = 'updated';
+      });
   }
 };
 

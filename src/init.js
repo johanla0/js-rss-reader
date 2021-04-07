@@ -5,29 +5,30 @@ import onChange from 'on-change';
 import * as yup from 'yup';
 import en from './locales/en.yml';
 import ru from './locales/ru.yml';
-import render from './render.js';
+import {
+  renderForm, renderContent, renderProcessWarning, renderTranslations,
+} from './render.js';
 import { loadFeed, updateFeeds } from './processFeeds.js';
 
-const urlSchema = yup.string().required().url();
-
 const app = (state, i18nInstance) => {
-  const refreshTimeout = 5000;
-  let timeoutId;
   const watchedState = onChange(state, (path) => {
     if (path === 'lng') {
       i18nInstance.changeLanguage(state.lng);
+      renderTranslations(i18nInstance);
     }
-    if (path === 'pause') {
-      if (!state.pause) {
-        timeoutId = updateFeeds(watchedState, refreshTimeout);
-        console.log(timeoutId);
-      }
-      if (state.pause && timeoutId !== undefined) {
-        clearTimeout(timeoutId);
-        console.log('paused');
-      }
+    if (path === 'form.state') {
+      renderForm(state);
+      renderTranslations(i18nInstance);
     }
-    render(state, i18nInstance);
+    if (path === 'content.state') {
+      renderContent(state);
+      renderTranslations(i18nInstance);
+    }
+    if (path === 'process.state') {
+      renderForm(state);
+      renderProcessWarning(state);
+      renderTranslations(i18nInstance);
+    }
   });
 
   watchedState.lng = i18nInstance.language.slice(0, 2);
@@ -46,17 +47,14 @@ const app = (state, i18nInstance) => {
   const url = document.querySelector('input[name="url"]');
   form.addEventListener('submit', (e) => {
     e.preventDefault();
-    if (watchedState.urls.includes(url.value)) {
-      watchedState.form.state = 'invalid';
-      return;
-    }
-    watchedState.form.url = url.value;
-    watchedState.urls.push(url.value);
+    const urlSchema = yup.string().required().url().notOneOf(state.urls);
     urlSchema.isValid(url.value).then((valid) => {
+      watchedState.form.url = url.value;
       if (!valid) {
         watchedState.form.state = 'invalid';
         return;
       }
+      watchedState.urls.push(url.value);
       watchedState.form.state = 'valid';
       watchedState.form.state = 'sent';
       loadFeed(url.value, watchedState);
@@ -74,13 +72,8 @@ const app = (state, i18nInstance) => {
     watchedState.form.state = 'editing';
   });
 
-  document.addEventListener('shown.bs.modal', () => {
-    watchedState.pause = true;
-  });
-
-  document.addEventListener('hidden.bs.modal', () => {
-    watchedState.pause = false;
-  });
+  const refreshTimeout = 5000;
+  updateFeeds(watchedState, refreshTimeout);
 };
 
 export default () => {
@@ -88,11 +81,17 @@ export default () => {
     urls: [],
     feeds: [],
     posts: [],
+    newPosts: [],
     form: {
       url: null,
       state: 'empty',
     },
-    pause: null,
+    content: {
+      state: 'idle',
+    },
+    process: {
+      state: 'idle',
+    },
     lng: null,
   };
 

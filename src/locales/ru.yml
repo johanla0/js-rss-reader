@@ -13,3 +13,5 @@ translation:
     button_preview: Просмотр
     button_close: Закрыть
     button_openLink: Читать полностью
+  alerts:
+    no_rss: Не найдено RSS
