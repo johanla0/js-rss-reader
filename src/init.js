@@ -1,5 +1,4 @@
 import '../node_modules/bootstrap/dist/js/bootstrap.bundle.js';
-import './scss/style.scss';
 import i18next from 'i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
 import onChange from 'on-change';

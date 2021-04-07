@@ -181,6 +181,7 @@ export default (state, i18nInstance) => {
       document.querySelector('#loadingSpinner').classList.add('d-none');
       document.querySelector('#loadingSpinner').classList.remove('d-block');
       renderContent(state, i18nInstance);
+      setTimeout(() => { url.classList.remove('is-valid'); }, 2000);
       sectionContent.classList.remove('d-none');
       break;
     case 'updated':
