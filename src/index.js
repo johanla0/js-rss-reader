@@ -1,22 +1,10 @@
+/* eslint-disable no-param-reassign */
 import * as yup from 'yup';
-import i18next from 'i18next';
 import { loadFeed, updateFeeds } from './processFeeds.js';
-import { watchedState, state } from './watcher.js';
 
 const urlSchema = yup.string().required().url();
 
-export default () => {
-  watchedState.lng = i18next.language?.slice(0, 2);
-  const languages = document.querySelectorAll(
-    '#languageSelector .dropdown-item',
-  );
-  languages.forEach((language) => {
-    language.addEventListener('click', (e) => {
-      e.preventDefault();
-      watchedState.lng = language.dataset.lng;
-    });
-  });
-
+export default (watchedState) => {
   window.addEventListener('load', () => {
     watchedState.form.state = 'empty';
   });
@@ -25,7 +13,7 @@ export default () => {
   const url = document.querySelector('input[name="url"]');
   form.addEventListener('submit', (e) => {
     e.preventDefault();
-    if (state.urls.includes(url.value)) {
+    if (watchedState.urls.includes(url.value)) {
       watchedState.form.state = 'invalid';
       return;
     }
@@ -38,7 +26,7 @@ export default () => {
       }
       watchedState.form.state = 'valid';
       watchedState.form.state = 'sent';
-      loadFeed(url.value);
+      loadFeed(url.value, watchedState);
     });
   });
 
@@ -55,7 +43,7 @@ export default () => {
 
   const refreshTimeout = 5000;
   watchedState.timeoutId = setTimeout(
-    () => updateFeeds(state, refreshTimeout),
+    () => updateFeeds(watchedState, refreshTimeout),
     refreshTimeout,
   );
 };

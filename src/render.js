@@ -1,11 +1,23 @@
 /* eslint-disable no-param-reassign */
-import i18next from 'i18next';
 import hash from './getHash.js';
 
-const updateTranslations = () => {
-  const fields = ['title', 'subtitle', 'valid-tooltip', 'invalid-tooltip', 'example', 'feeds', 'posts'];
+const updateTranslations = (i18nInstance) => {
+  const fields = [
+    'title',
+    'subtitle',
+    'valid-tooltip',
+    'invalid-tooltip',
+    'example',
+    'feeds',
+    'posts',
+  ];
   const placeholders = ['inputURL'];
-  const buttonsList = ['button_add', 'button_preview', 'button_close', 'button_openLink'];
+  const buttonsList = [
+    'button_add',
+    'button_preview',
+    'button_close',
+    'button_openLink',
+  ];
   const language = {
     en: 'English',
     ru: 'Русский',
@@ -13,26 +25,28 @@ const updateTranslations = () => {
   fields.forEach((field) => {
     const elem = document.querySelector(`#${field}`);
     if (elem !== undefined) {
-      elem.textContent = i18next.t(`${field}`);
+      elem.textContent = i18nInstance.t(`${field}`);
     }
   });
   placeholders.forEach((placeholder) => {
     const elements = document.querySelectorAll(`.${placeholder}`);
-    elements.forEach((elem) => { elem.placeholder = i18next.t(`placeholders.${placeholder}`); });
+    elements.forEach((elem) => {
+      elem.placeholder = i18nInstance.t(`placeholders.${placeholder}`);
+    });
   });
   buttonsList.forEach((button) => {
     const elements = document.querySelectorAll(`.${button}`);
     elements.forEach((elem) => {
       if (elem !== undefined) {
-        elem.textContent = i18next.t(`buttons.${button}`);
+        elem.textContent = i18nInstance.t(`buttons.${button}`);
       }
     });
   });
-  document.querySelector('#languageSwitchButton').textContent = language[i18next.language.slice(0, 2)];
+  document.querySelector('#languageSwitchButton').textContent = language[i18nInstance.language.slice(0, 2)];
 };
 
-export default (state) => {
-  updateTranslations();
+export default (state, i18nInstance) => {
+  updateTranslations(i18nInstance);
   const url = document.querySelector('input[name="url"]');
   const fieldset = document.querySelector('fieldset');
   const feedsList = document.querySelector('.feeds ul');
@@ -89,7 +103,12 @@ export default (state) => {
         const h5 = document.createElement('h5');
         h5.append(a);
         const buttonPreview = document.createElement('button');
-        buttonPreview.classList.add('btn', 'btn-primary', 'btn-sm', 'button_preview');
+        buttonPreview.classList.add(
+          'btn',
+          'btn-primary',
+          'btn-sm',
+          'button_preview',
+        );
         buttonPreview.type = 'button';
         buttonPreview.dataset.id = postId;
         buttonPreview.dataset.bsToggle = 'modal';

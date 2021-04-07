@@ -1,7 +1,6 @@
 /* eslint-disable no-param-reassign */
 import _ from 'lodash';
 import hash from './getHash.js';
-import { watchedState } from './watcher.js';
 import getData from './getData.js';
 import parseRss from './parseRss.js';
 
@@ -12,27 +11,26 @@ const getFeed = (url) => getData(url)
     console.error(error);
   });
 
-const loadFeed = (url) => {
-  getFeed(url)
-    .then((result) => {
-      const { feed, posts } = result;
-      if (feed !== undefined) {
-        watchedState.feeds.push(feed);
-        watchedState.posts.push(...posts);
-        watchedState.form.state = 'success';
-        watchedState.form.url = '';
-        watchedState.form.state = 'empty';
-      } else {
-        watchedState.form.state = 'invalid';
-        watchedState.form.url = '';
-      }
-    });
+const loadFeed = (url, watchedState) => {
+  getFeed(url).then((result) => {
+    const { feed, posts } = result;
+    if (feed !== undefined) {
+      watchedState.feeds.push(feed);
+      watchedState.posts.push(...posts);
+      watchedState.form.state = 'success';
+      watchedState.form.url = '';
+      watchedState.form.state = 'empty';
+    } else {
+      watchedState.form.state = 'invalid';
+      watchedState.form.url = '';
+    }
+  });
 };
 
-const updateFeeds = (state, refreshTimeout) => {
-  const { urls } = state;
+const updateFeeds = (watchedState, refreshTimeout) => {
+  const { urls } = watchedState;
   watchedState.timeoutId = setTimeout(
-    () => updateFeeds(state, refreshTimeout),
+    () => updateFeeds(watchedState, refreshTimeout),
     refreshTimeout,
   );
   if (urls.length === 0) {
@@ -43,7 +41,9 @@ const updateFeeds = (state, refreshTimeout) => {
       .then((result) => {
         const { feed, posts } = result;
         const feedId = hash(feed.link);
-        const savedPosts = state.posts.filter((elem) => elem.feedId === feedId);
+        const savedPosts = watchedState.posts.filter(
+          (elem) => elem.feedId === feedId,
+        );
         const newPosts = _.differenceWith(posts, savedPosts, _.isEqual);
         watchedState.posts.unshift(...newPosts);
         watchedState.form.state = 'success';
