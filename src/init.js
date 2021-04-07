@@ -1,40 +1,101 @@
-// eslint-disable-next-line import/extensions
 import '../node_modules/bootstrap/dist/js/bootstrap.bundle.js';
+import './scss/style.scss';
 import i18next from 'i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
 import onChange from 'on-change';
-import app from './index.js';
-import './scss/style.scss';
+import * as yup from 'yup';
 import en from './locales/en.yml';
 import ru from './locales/ru.yml';
 import render from './render.js';
+import { loadFeed, updateFeeds } from './processFeeds.js';
 
-const run = () => {
+const urlSchema = yup.string().required().url();
+
+const app = (state, i18nInstance) => {
+  const refreshTimeout = 5000;
+  let timeoutId;
+  const watchedState = onChange(state, (path) => {
+    if (path === 'lng') {
+      i18nInstance.changeLanguage(state.lng);
+    }
+    if (path === 'pause') {
+      if (!state.pause) {
+        timeoutId = updateFeeds(watchedState, refreshTimeout);
+        console.log(timeoutId);
+      }
+      if (state.pause && timeoutId !== undefined) {
+        clearTimeout(timeoutId);
+        console.log('paused');
+      }
+    }
+    render(state, i18nInstance);
+  });
+
+  watchedState.lng = i18nInstance.language.slice(0, 2);
+  const languages = document.querySelectorAll(
+    '#languageSelector .dropdown-item',
+  );
+  languages.forEach((language) => {
+    language.addEventListener('click', (e) => {
+      e.preventDefault();
+      watchedState.lng = language.dataset.lng;
+    });
+  });
+  watchedState.pause = false;
+
+  const form = document.querySelector('.rss-form');
+  const url = document.querySelector('input[name="url"]');
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    if (watchedState.urls.includes(url.value)) {
+      watchedState.form.state = 'invalid';
+      return;
+    }
+    watchedState.form.url = url.value;
+    watchedState.urls.push(url.value);
+    urlSchema.isValid(url.value).then((valid) => {
+      if (!valid) {
+        watchedState.form.state = 'invalid';
+        return;
+      }
+      watchedState.form.state = 'valid';
+      watchedState.form.state = 'sent';
+      loadFeed(url.value, watchedState);
+    });
+  });
+
+  url.addEventListener('focus', () => {
+    watchedState.form.state = 'editing';
+  });
+
+  const exampleURL = document.querySelector('a#exampleURL');
+  exampleURL.addEventListener('click', (e) => {
+    e.preventDefault();
+    watchedState.form.url = exampleURL.textContent;
+    watchedState.form.state = 'editing';
+  });
+
+  document.addEventListener('shown.bs.modal', () => {
+    watchedState.pause = true;
+  });
+
+  document.addEventListener('hidden.bs.modal', () => {
+    watchedState.pause = false;
+  });
+};
+
+export default () => {
   const state = {
     urls: [],
     feeds: [],
     posts: [],
     form: {
-      url: '',
+      url: null,
       state: 'empty',
     },
-    lng: '',
+    pause: null,
+    lng: null,
   };
-
-  // Description:
-  // feeds: {title, description, link, id}
-  // posts: {title, description, link, feedId, guid, pubDate}
-  // state.form.state corresponds to the FSM state:
-  // empty ->
-  //   editing ->
-  //     invalid ->
-  //       editing
-  //     valid ->
-  //       sent ->
-  //         success ->
-  //           empty
-  //         invalid ->
-  //           editing
 
   const i18nInstance = i18next.createInstance();
   i18nInstance
@@ -63,7 +124,7 @@ const run = () => {
         caches: ['localStorage', 'cookie'],
         excludeCacheFor: ['cimode'],
       },
-      fallbackLng: 'ru',
+      fallbackLng: 'en',
       debug: true,
       interpolation: {
         escapeValue: false,
@@ -74,26 +135,8 @@ const run = () => {
       },
     })
     .then(() => {
-      const watchedState = onChange(state, (path) => {
-        if (path === 'lng') {
-          i18nInstance.changeLanguage(state.lng);
-        }
-        render(state, i18nInstance);
-      });
-      watchedState.lng = i18nInstance.language.slice(0, 2);
-      const languages = document.querySelectorAll(
-        '#languageSelector .dropdown-item',
-      );
-      languages.forEach((language) => {
-        language.addEventListener('click', (e) => {
-          e.preventDefault();
-          watchedState.lng = language.dataset.lng;
-        });
-      });
-      app(watchedState);
+      app(state, i18nInstance);
     })
     // eslint-disable-next-line no-console
     .catch((err) => console.error(`Failed loading i18next translations: ${err}`));
 };
-
-run();

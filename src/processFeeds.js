@@ -36,13 +36,13 @@ const loadFeed = (url, watchedState) => {
 };
 
 const updateFeeds = (watchedState, refreshTimeout) => {
-  const { urls } = watchedState;
-  watchedState.timeoutId = setTimeout(
+  const timeoutId = setTimeout(
     () => updateFeeds(watchedState, refreshTimeout),
     refreshTimeout,
   );
+  const { urls } = watchedState;
   if (urls.length === 0) {
-    return;
+    return timeoutId;
   }
   for (let i = 0; i < urls.length; i += 1) {
     getFeed(urls[i])
@@ -53,9 +53,11 @@ const updateFeeds = (watchedState, refreshTimeout) => {
           (elem) => elem.feedId === feedId,
         );
         const newPosts = _.differenceWith(posts, savedPosts, _.isEqual);
-        watchedState.posts.unshift(...newPosts);
-        watchedState.form.state = 'success';
-        watchedState.form.state = 'empty';
+        if (newPosts.length > 0) {
+          watchedState.form.state = 'updated';
+          watchedState.posts.unshift(...newPosts);
+        }
+        return timeoutId;
       })
       // eslint-disable-next-line no-console
       .catch((error) => console.error(error));
