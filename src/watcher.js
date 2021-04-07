@@ -6,15 +6,18 @@ const state = {
   urls: [],
   feeds: [],
   posts: [],
-  url: '',
-  state: '',
+  form: {
+    url: '',
+    state: '',
+  },
+  lng: '',
   timeoutId: '',
 };
 
 // Description:
 // feeds: {title, description, link, id}
 // posts: {title, description, link, feedId, guid, pubDate}
-// state.state corresponds to the FSM state:
+// state.form.state corresponds to the FSM state:
 // empty ->
 //   editing ->
 //     invalid ->

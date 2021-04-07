@@ -19,12 +19,12 @@ const loadFeed = (url) => {
       if (feed !== undefined) {
         watchedState.feeds.push(feed);
         watchedState.posts.push(...posts);
-        watchedState.state = 'success';
-        watchedState.url = '';
-        watchedState.state = 'empty';
+        watchedState.form.state = 'success';
+        watchedState.form.url = '';
+        watchedState.form.state = 'empty';
       } else {
-        watchedState.state = 'invalid';
-        watchedState.url = '';
+        watchedState.form.state = 'invalid';
+        watchedState.form.url = '';
       }
     });
 };
@@ -46,8 +46,8 @@ const updateFeeds = (state, refreshTimeout) => {
         const savedPosts = state.posts.filter((elem) => elem.feedId === feedId);
         const newPosts = _.differenceWith(posts, savedPosts, _.isEqual);
         watchedState.posts.unshift(...newPosts);
-        watchedState.state = 'success';
-        watchedState.state = 'empty';
+        watchedState.form.state = 'success';
+        watchedState.form.state = 'empty';
       })
       // eslint-disable-next-line no-console
       .catch((error) => console.error(error));

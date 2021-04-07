@@ -17,13 +17,14 @@ const updateTranslations = () => {
     }
   });
   placeholders.forEach((placeholder) => {
-    document.querySelectorAll(`.${placeholder}`).placeholder = i18next.t(`placeholders.${placeholder}`);
+    const elements = document.querySelectorAll(`.${placeholder}`);
+    elements.forEach((elem) => { elem.placeholder = i18next.t(`placeholders.${placeholder}`); });
   });
-  buttonsList.forEach((elem) => {
-    const buttons = document.querySelectorAll(`.${elem}`);
-    buttons.forEach((button) => {
-      if (button !== undefined) {
-        button.textContent = i18next.t(`buttons.${elem}`);
+  buttonsList.forEach((button) => {
+    const elements = document.querySelectorAll(`.${button}`);
+    elements.forEach((elem) => {
+      if (elem !== undefined) {
+        elem.textContent = i18next.t(`buttons.${button}`);
       }
     });
   });
@@ -37,7 +38,7 @@ export default (state) => {
   const feedsList = document.querySelector('.feeds ul');
   const postsList = document.querySelector('.posts ul');
   const sectionContent = document.querySelector('section.content');
-  switch (state.state) {
+  switch (state.form.state) {
     case 'empty':
       url.value = '';
       fieldset.disabled = false;
@@ -158,5 +159,5 @@ export default (state) => {
     default:
       break;
   }
-  url.value = state.url;
+  url.value = state.form.url;
 };
