@@ -92,6 +92,7 @@ const run = () => {
       });
       app(watchedState);
     })
+    // eslint-disable-next-line no-console
     .catch((err) => console.error(`Failed loading i18next translations: ${err}`));
 };
 

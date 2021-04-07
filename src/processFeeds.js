@@ -1,11 +1,19 @@
 /* eslint-disable no-param-reassign */
 import _ from 'lodash';
 import hash from './getHash.js';
-import getData from './getData.js';
+import getRawData from './getRawData.js';
 import parseRss from './parseRss.js';
 
-const getFeed = (url) => getData(url)
-  .then((response) => parseRss(response))
+const getFeed = (url) => getRawData(url)
+  .then((response) => {
+    const { feed, posts } = parseRss(response);
+    const feedId = hash(feed.link);
+    feed.id = feedId;
+    posts.forEach((post) => {
+      post.feedId = feedId;
+    });
+    return { feed, posts };
+  })
   .catch((error) => {
     // eslint-disable-next-line no-console
     console.error(error);
