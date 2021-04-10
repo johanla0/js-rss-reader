@@ -9,6 +9,10 @@
 <body>
   <main class="flex-grow-1">
     <header class="container-fluid p-5">
+      <div class="alert alert-warning alert-dismissible fade col-10 mx-auto d-none" role="alert">
+        <p class="m-0 p-0"></p>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="close"></button>
+      </div>
       <div class="row justify-content-end">
         <div class="col-1">
           <div class="dropdown" id="languageSelector">
@@ -27,7 +31,7 @@
             <fieldset>
               <div class="row">
                 <div class="col position-relative">
-                  <input autofocus="" required="" name="url" aria-label="url" class="form-control form-control-lg w-100 inputURL" placeholder="ссылка на RSS-ленту">
+                  <input autofocus="" required="" id="url" name="url" aria-label="url" class="form-control form-control-lg w-100 inputURL" placeholder="ссылка на RSS-ленту">
                   <div class="valid-tooltip" id="valid-tooltip">
                     RSS успешно загружен
                   </div>
@@ -63,6 +67,23 @@
           </ul>
         </div>
       </div>
+      <div id="modalPreview" aria-labelledby="modalPreviewLabel" class="modal fade" tabindex="-1">
+          <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 id="modalPreviewLabel" class="modal-title"></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <p></p>
+              </div>
+              <div class="modal-footer">
+                <a href="" rel="noopener noreferer" target="_blank" class="btn btn-primary button_openLink"></a>
+                <button type="button" class="btn btn-secondary button_close" data-bs-dismiss="modal"></button>
+              </div>
+            </div>
+          </div>
+        </div>
     </section>
   </main>
 </body>

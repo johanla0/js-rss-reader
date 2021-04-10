@@ -6,7 +6,7 @@ import * as yup from 'yup';
 import en from './locales/en.yml';
 import ru from './locales/ru.yml';
 import {
-  renderForm, renderContent, renderProcessWarning, renderTranslations,
+  renderForm, renderContent, renderTranslations,
 } from './render.js';
 import { loadFeed, updateFeeds } from './processFeeds.js';
 
@@ -16,60 +16,57 @@ const app = (state, i18nInstance) => {
       i18nInstance.changeLanguage(state.lng);
       renderTranslations(i18nInstance);
     }
-    if (path === 'form.state') {
+    if (path.includes('form')) {
       renderForm(state);
       renderTranslations(i18nInstance);
     }
-    if (path === 'content.state') {
+    if (path === 'request.state') {
+      renderForm(state);
       renderContent(state);
       renderTranslations(i18nInstance);
     }
-    if (path === 'process.state') {
-      renderForm(state);
-      renderProcessWarning(state);
-      renderTranslations(i18nInstance);
-    }
   });
-
-  watchedState.lng = i18nInstance.language.slice(0, 2);
-  const languages = document.querySelectorAll(
-    '#languageSelector .dropdown-item',
-  );
-  languages.forEach((language) => {
-    language.addEventListener('click', (e) => {
-      e.preventDefault();
-      watchedState.lng = language.dataset.lng;
+  const initLanguageDropdown = () => {
+    watchedState.lng = i18nInstance.language.slice(0, 2);
+    const languages = document.querySelectorAll(
+      '#languageSelector .dropdown-item',
+    );
+    languages.forEach((language) => {
+      language.addEventListener('click', (e) => {
+        e.preventDefault();
+        watchedState.lng = language.dataset.lng;
+      });
     });
-  });
-  watchedState.pause = false;
+  };
+  initLanguageDropdown();
+  renderForm(state);
+
+  const fillInputWithURL = () => {
+    const exampleURL = document.querySelector('a#exampleURL');
+    exampleURL.addEventListener('click', (e) => {
+      e.preventDefault();
+      watchedState.form.url = exampleURL.textContent;
+    });
+  };
+  fillInputWithURL();
 
   const form = document.querySelector('.rss-form');
-  const url = document.querySelector('input[name="url"]');
-  form.addEventListener('submit', (e) => {
+  form.addEventListener('submit', function (e) {
     e.preventDefault();
+    const formData = new FormData(this);
+    const url = formData.get('url');
     const urlSchema = yup.string().required().url().notOneOf(state.urls);
-    urlSchema.isValid(url.value).then((valid) => {
-      watchedState.form.url = url.value;
+    urlSchema.isValid(url).then((valid) => {
+      watchedState.form.url = url;
       if (!valid) {
         watchedState.form.state = 'invalid';
         return;
       }
-      watchedState.urls.push(url.value);
+      watchedState.urls.push(url);
       watchedState.form.state = 'valid';
-      watchedState.form.state = 'sent';
-      loadFeed(url.value, watchedState);
+      watchedState.request.state = 'sent';
+      loadFeed(url, watchedState);
     });
-  });
-
-  url.addEventListener('focus', () => {
-    watchedState.form.state = 'editing';
-  });
-
-  const exampleURL = document.querySelector('a#exampleURL');
-  exampleURL.addEventListener('click', (e) => {
-    e.preventDefault();
-    watchedState.form.url = exampleURL.textContent;
-    watchedState.form.state = 'editing';
   });
 
   const refreshTimeout = 5000;
@@ -81,16 +78,21 @@ export default () => {
     urls: [],
     feeds: [],
     posts: [],
-    newPosts: [],
     form: {
-      url: null,
+      url: '',
       state: 'empty',
+      error: null,
     },
-    content: {
-      state: 'idle',
+    modal: {
+      state: 'hidden',
+      postId: null,
     },
-    process: {
+    ui: {
+      openedPosts: [],
+    },
+    request: {
       state: 'idle',
+      error: null,
     },
     lng: null,
   };

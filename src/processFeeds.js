@@ -17,29 +17,32 @@ const getFeed = (url) => getRawData(url)
   });
 
 const loadFeed = (url, watchedState) => {
-  watchedState.process.state = 'idle';
+  watchedState.request.state = 'idle';
   getFeed(url).then((result) => {
     const { feed, posts } = result;
     if (feed !== undefined) {
       watchedState.feeds.push(feed);
       watchedState.posts.push(...posts.reverse());
-      watchedState.form.state = 'success';
+      watchedState.request.state = 'success';
       watchedState.form.url = '';
+      watchedState.request.state = 'idle';
       watchedState.form.state = 'empty';
-      watchedState.content.state = 'loaded';
     } else {
       watchedState.form.state = 'invalid';
+      watchedState.form.state = 'empty';
     }
   })
     .catch(() => {
       watchedState.urls.pop();
       watchedState.form.state = 'invalid';
-      watchedState.process.state = 'invalid';
+      watchedState.form.state = 'empty';
+      watchedState.request.error = 'no_rss';
+      watchedState.request.state = 'error';
+      watchedState.request.state = 'idle';
     });
 };
 
 const updateFeeds = (watchedState, refreshTimeout) => {
-  watchedState.content.state = 'idle';
   setTimeout(
     () => updateFeeds(watchedState, refreshTimeout),
     refreshTimeout,
@@ -55,13 +58,13 @@ const updateFeeds = (watchedState, refreshTimeout) => {
         const savedPosts = watchedState.posts.filter(
           (elem) => elem.feedLink === feed.link,
         );
-        const newPosts = _.differenceWith(posts, savedPosts, _.isEqual);
+        const newPosts = _.differenceWith(posts, savedPosts, _.isEqual).reverse();
         if (newPosts.length === 0) {
           return;
         }
         watchedState.posts.push(...newPosts);
-        watchedState.newPosts = newPosts.reverse();
-        watchedState.content.state = 'updated';
+        watchedState.request.state = 'success';
+        watchedState.request.state = 'idle';
       });
   }
 };
